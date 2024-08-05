@@ -1,4 +1,4 @@
-class Value:
+class Scalar:
   def __init__(self, data, _op='', label=''):
     self.data = data
     self.label = label
