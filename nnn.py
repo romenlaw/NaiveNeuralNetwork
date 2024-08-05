@@ -1,5 +1,5 @@
 class Scalar:
-  def __init__(self, data, _op='', label=''):
+  def __init__(self, data, _children, _op='', label=''):
     self.data = data
     self.label = label
     self._op = _op
@@ -8,17 +8,17 @@ class Scalar:
     return f'{self.label}: {self.data}'
 
   def __add__(self, other):
-    out = Value(self.data + other.data, '+')
+    out = Scalar(self.data + other.data, (self, other), '+')
     return out
     
   def __mul__(self, other):
-    out = Value(self.data * other.data, '*')
+    out = Scalar(self.data * other.data, (self, other), '*')
     return out
 
   def __truediv__(self, other):
-    out = Value(self.data / other.data, '/')
+    out = Scalar(self.data / other.data, (self, other), '/')
     return out
 
   def __pow__(self, other):
-    out = Value(self.data ** other.data, 'pow')
+    out = Scalar(self.data ** other.data, (self, other), 'pow')
     return out
