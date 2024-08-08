@@ -6,9 +6,9 @@ def trace(root):
 
   def build(n):
     if n not in nodes:
-      nodes.insert(0, n)
+      nodes.insert(0, n) # this is useless because graphvis does not preserve order when laying out complex graph
       for child in tuple(reversed(n._operands)):
-        edges.add( (child, n) ) # this is useless because graphvis does not preserve order when laying out complex graph
+        edges.add( (child, n) ) 
         build(child)
 
   build(root)
@@ -27,7 +27,7 @@ def visualise(root, format='svg', rankdir='LR'):
   g = graphviz.Digraph(format='svg', graph_attr={'rankdir': 'LR'})
   for n in nodes:
     node_name=str(id(n))
-    g.node(name=node_name, label="{%s.data=%.4f}" % (n.label, n.data), shape="record")
+    g.node(name=node_name, label="{%s.data=%.4f\\ngrad=%.4f}" % (n.label, n.data, n.grad), shape="record")
     if n._op:
       op_node_name=str(id(n))+n._op
       g.node(name=op_node_name, label=n._op)
