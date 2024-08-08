@@ -1,5 +1,5 @@
 class Scalar:
-  def __init__(self, data, _children, _op='', label=''):
+  def __init__(self, data, _children=(), _op='', label=''):
     self.data = data
     self.label = label
     self._op = _op
