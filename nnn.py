@@ -11,6 +11,21 @@ class Scalar:
   def __repr__(self):
     return f'{self.label}: {self.data}'
 
+  def backward(self):
+    # reuse the code from visualiser
+    nodes=[] 
+
+    def build(n):
+      if n not in nodes:
+        nodes.append(n) 
+        for child in tuple(reversed(n._operands)):
+          build(child)
+
+    build(self)
+    print(nodes)
+    self.grad=1
+    for n in nodes:
+      n._backward()
 
   def __add__(self, other):
     print(self)
