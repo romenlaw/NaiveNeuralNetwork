@@ -3,6 +3,8 @@ class Scalar:
     self.data = data
     self.label = label
     self._op = _op
+    self._operands = _children
+    self.grad = None
 
   def __repr__(self):
     return f'{self.label}: {self.data}'
