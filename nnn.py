@@ -12,24 +12,37 @@ class Scalar:
     return f'{self.label}: {self.data}'
 
   def backward(self):
-    # reuse the code from visualiser
     nodes=[] 
 
+    # need to traverse to the leaf nodes before adding to the list
     def build(n):
       if n not in nodes:
-        nodes.append(n) 
-        for child in tuple(reversed(n._operands)):
+        for child in n._operands:
           build(child)
-
+        nodes.append(n) 
+      
     build(self)
+    # reverse order of list, i.e. root to leaves
+    nodes.reverse()
     print(nodes)
     self.grad=1
     for n in nodes:
       n._backward()
 
+  def relu(self):
+    out = Scalar(self.data if self.data>=0 else 0, _children=(self,) , _op='ReLU')
+
+    def _backward():
+      # += either out.grad or 0
+      self.grad += (out.data>0) * out.grad
+
+    out._backward = _backward
+
+    return out
+
   def __add__(self, other):
-    print(self)
-    print(other, isinstance(other, Scalar), type(other))
+    #print(self)
+    #print(other, isinstance(other, Scalar), type(other))
     other = other if isinstance(other, Scalar) else Scalar(other)
     out = Scalar(self.data + other.data, (self, other), '+')
 
@@ -65,3 +78,23 @@ class Scalar:
     out._backward = _backward
     return out
 
+  def __neg__(self): # -self
+    return self * -1
+
+  def __radd__(self, other): # other + self
+    return self + other
+
+  def __sub__(self, other): # self - other
+    return self + (-other)
+
+  def __rsub__(self, other): # other - self
+    return other + (-self)
+
+  def __rmul__(self, other): # other * self
+    return self * other
+
+  def __truediv__(self, other): # self / other
+    return self * other**-1
+
+  def __rtruediv__(self, other): # other / self
+    return other * self**-1
