@@ -1,3 +1,5 @@
+import math
+
 class Scalar:
   def __init__(self, data, _children=(), _op='', label=''):
     self.data = data
@@ -40,6 +42,26 @@ class Scalar:
 
     return out
 
+  def tanh(self):
+    x = self.data
+    t = (math.exp(2*x)-1) / (math.exp(2*x)+1)
+    out = Scalar(t, (self,), 'tanh')
+
+    def _backward():
+      self.grad += (1-t**2) * out.grad
+    out._backward = _backward
+    return out
+
+  def exp(self):
+    x = self.data
+    out = Scalar(math.exp(x), (self,), 'exp')
+
+    def _backward():
+      self.grad += out.data * out.grad
+    out._backward = _backward
+
+    return out
+
   def __add__(self, other):
     #print(self)
     #print(other, isinstance(other, Scalar), type(other))
@@ -65,13 +87,11 @@ class Scalar:
     return out
 
   def __truediv__(self, other):
-    other = other if isinstance(other, Scalar) else Scalar(other)
-    out = Scalar(self.data / other.data, (self, other), '/')
-    return out
+    return self * other**(-1)
 
   def __pow__(self, other):
     assert isinstance(other, (int, float)) , "only int or float allowed"
-    out = Scalar(self.data ** other, (self,), 'pow')
+    out = Scalar(self.data ** other, (self,), f'pow({other})')
 
     def _backward():
       self.grad += (other * self.data**(other-1)) * out.grad
