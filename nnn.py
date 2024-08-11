@@ -5,7 +5,7 @@ class Scalar:
     self.data = data
     self.label = label
     self._op = _op
-    self._operands = _children
+    self._operands = set(_children) # using set for efficiency?
     self.grad = 0.
     # will be set by operator magic functions
     self._backward = lambda: None
@@ -157,6 +157,9 @@ class Neuron(Module):
   def parameters(self):
     return self.w + [self.b]
 
+  def __repr__(self) -> str:
+    return f"Neuron[L{self._layer},{self._index},non_linear={self.non_linear}]"
+
 class Layer(Module):
   def __init__(self, nin, nout, nonlin=True, label=''):
     """
@@ -164,6 +167,10 @@ class Layer(Module):
     nout - number of outputs of the layer - i.e. number of neurons of current layer
     """
     self.neurons = [Neuron(nin, nonlin, label, str(i)) for i in (range(nout))]
+    self.label=label
+    self.non_linear = nonlin
+    self.nin=nin
+    self.nout=nout
     return
 
   def __call__(self, X):
@@ -172,6 +179,10 @@ class Layer(Module):
     """
     outs = [n(X) for n in self.neurons]
     return outs[0] if len(outs)==1 else outs
+
+  def __repr__(self) -> str:
+    return f"\n Layer[{self.label},{self.nin} x {self.nout}, non_linear={self.non_linear}]: " +\
+      f"[{', '.join(str(n) for n in self.neurons)}]"
 
   def parameters(self):
     return [p for n in self.neurons for p in n.parameters()]
@@ -196,6 +207,8 @@ class MLP(Module):
     # only the last layer is non-linear
     self.layers = [Layer(nin, nout, index<len(nouts)-1, str(index)) \
       for index, (nin, nout) in enumerate(list(zip(nins, nouts)))]
+
+    self.nin=nin
     return
 
   def __call__(self, X):
@@ -204,11 +217,16 @@ class MLP(Module):
     """
     # turn X into list of Scalar to make visulaisation clearer
     if not isinstance(X[0], Scalar):
-      x=[Scalar(X[i], label=f"x{i}") for i in range(len(X))]
+      X=[Scalar(X[i], label=f"x{i}") for i in range(len(X))]
+    
     for layer in self.layers:
-      x = layer(x)
+      X = layer(X)
 
-    return x
+    return X
 
   def parameters(self):
     return [p for l in self.layers for p in l.parameters()]
+
+  def __repr__(self) -> str:
+    return f"MLP[nin={self.nin}, n_layers={len(self.layers)}]: " + \
+      f"[{', '.join(str(layer) for layer in self.layers)}]"
