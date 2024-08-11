@@ -118,3 +118,61 @@ class Scalar:
 
   def __rtruediv__(self, other): # other / self
     return other * self**-1
+
+import random
+
+class Neuron:
+  def __init__(self, nin):
+    """
+    nin - number of inputs to the neuron
+    """
+    self.w = [Scalar(random.uniform(-1, 1)) for _ in range(nin)]
+    self.b = Scalar(random.uniform(-1, 1))
+    return
+
+  def __call__(self, X):
+    """
+    forward pass of the neuron, X and W must be same dimension
+    returns tanh( W*X+b )
+    """
+    out = sum(([xi*wi for xi, wi in list(zip(X, self.w))]), self.b)
+    return out.tanh()
+
+class Layer:
+  def __init__(self, nin, nout):
+    """
+    nin - number of inputs of the layer - i.e. number of neurons in input layer
+    nout - number of outputs of the layer - i.e. number of neurons of current layer
+    """
+    self.neurons = [Neuron(nin) for _ in (range(nout))]
+    return
+
+  def __call__(self, X):
+    """
+    forward pass of all the neurons in the current layer
+    """
+    outs = [n(X) for n in self.neurons]
+    return outs
+
+class MLP:
+  """
+  multi-layer perceptron
+  """
+  def __init__(self, nin, nouts):
+    """
+    nin - number of input neurons
+    nouts - list of nout. The len(nouts) is the number of layers
+            each element of nouts is number of neurons in corresponding layer
+    """
+    nins = [nin] + nouts[:-1]
+    self.layers = [Layer(nin, nout) for nin, nout in list(zip(nins, nouts))]
+    return
+
+  def __call__(self, X):
+    """
+    forward pass of the MLP, X dimension is nin
+    """
+    for layer in self.layers:
+      X = layer(X)
+
+    return X
