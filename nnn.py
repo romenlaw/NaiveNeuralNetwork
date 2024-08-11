@@ -126,8 +126,8 @@ class Neuron:
     """
     nin - number of inputs to the neuron
     """
-    self.w = [Scalar(random.uniform(-1, 1)) for _ in range(nin)]
-    self.b = Scalar(random.uniform(-1, 1))
+    self.w = [Scalar(random.uniform(-1, 1), f"w{i}") for i in range(nin)]
+    self.b = Scalar(random.uniform(-1, 1), 'b')
     return
 
   def __call__(self, X):
@@ -137,6 +137,9 @@ class Neuron:
     """
     out = sum(([xi*wi for xi, wi in list(zip(X, self.w))]), self.b)
     return out.tanh()
+
+  def parameters(self):
+    return self.w + [self.b]
 
 class Layer:
   def __init__(self, nin, nout):
@@ -152,7 +155,16 @@ class Layer:
     forward pass of all the neurons in the current layer
     """
     outs = [n(X) for n in self.neurons]
-    return outs
+    return outs[0] if len(outs==1) else outs
+
+  def parameters(self):
+    return [p for n in self.neurons for p in n.parameters()]
+    # equivalent to:
+    #params=[]
+    #for n in self.neurons:
+    #  params.extend( n.parameters() )
+    #return params
+
 
 class MLP:
   """
@@ -176,3 +188,6 @@ class MLP:
       X = layer(X)
 
     return X
+
+  def parameters(self):
+    return [p for l in self.layers for p in l.parameters()]
