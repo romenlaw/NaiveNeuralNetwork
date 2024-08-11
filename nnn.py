@@ -15,18 +15,21 @@ class Scalar:
 
   def backward(self):
     nodes=[] 
+    visited=set()
 
     # need to traverse to the leaf nodes before adding to the list
     def build(n):
       if n not in nodes:
-        for child in n._operands:
-          build(child)
-        nodes.append(n) 
+        if n not in visited:
+          visited.add(n)
+          for child in n._operands:
+            build(child)
+          nodes.append(n) 
       
     build(self)
     # reverse order of list, i.e. root to leaves
     nodes.reverse()
-    print(nodes)
+    #print(nodes)
     self.grad=1
     for n in nodes:
       n._backward()
@@ -136,6 +139,7 @@ class Neuron:
     returns tanh( W*X+b )
     """
     out = sum(([xi*wi for xi, wi in list(zip(X, self.w))]), self.b)
+    out.label='o'
     return out.tanh()
 
   def parameters(self):
