@@ -124,7 +124,15 @@ class Scalar:
 
 import random
 
-class Neuron:
+class Module:
+  def zero_grad(self):
+    for p in self.parameters():
+      p.grad=0.
+
+  def parameters(self):
+    return []
+
+class Neuron(Module):
   def __init__(self, nin, _layer='', _index=''):
     """
     nin - number of inputs to the neuron
@@ -148,7 +156,7 @@ class Neuron:
   def parameters(self):
     return self.w + [self.b]
 
-class Layer:
+class Layer(Module):
   def __init__(self, nin, nout, label=''):
     """
     nin - number of inputs of the layer - i.e. number of neurons in input layer
@@ -173,7 +181,7 @@ class Layer:
     #return params
 
 
-class MLP:
+class MLP(Module):
   """
   multi-layer perceptron
   """
