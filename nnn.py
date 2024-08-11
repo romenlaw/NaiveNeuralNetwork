@@ -133,13 +133,14 @@ class Module:
     return []
 
 class Neuron(Module):
-  def __init__(self, nin, _layer='', _index=''):
+  def __init__(self, nin, nonlin=True, _layer='', _index=''):
     """
     nin - number of inputs to the neuron
     layer - name of the layer where the neuron sits. used for visualisation.
     """
     self.w = [Scalar(random.uniform(-1, 1), label=f"w(L{_layer},{_index},I{i})") for i in range(nin)]
     self.b = Scalar(random.uniform(-1, 1), label=f'b(L{_layer},{_index})')
+    self.non_linear=nonlin
     self._layer=_layer
     self._index=_index
     return
@@ -151,18 +152,18 @@ class Neuron(Module):
     """
     out = sum(([xi*wi for xi, wi in list(zip(X, self.w))]), self.b)
     out.label=f'o(L{self._layer},{self._index})'
-    return out.tanh()
+    return out.tanh() if self.non_linear else out
 
   def parameters(self):
     return self.w + [self.b]
 
 class Layer(Module):
-  def __init__(self, nin, nout, label=''):
+  def __init__(self, nin, nout, nonlin=True, label=''):
     """
     nin - number of inputs of the layer - i.e. number of neurons in input layer
     nout - number of outputs of the layer - i.e. number of neurons of current layer
     """
-    self.neurons = [Neuron(nin, label, str(i)) for i in (range(nout))]
+    self.neurons = [Neuron(nin, nonlin, label, str(i)) for i in (range(nout))]
     return
 
   def __call__(self, X):
@@ -192,7 +193,9 @@ class MLP(Module):
             each element of nouts is number of neurons in corresponding layer
     """
     nins = [nin] + nouts[:-1]
-    self.layers = [Layer(nin, nout, str(index)) for index, (nin, nout) in enumerate(list(zip(nins, nouts)))]
+    # only the last layer is non-linear
+    self.layers = [Layer(nin, nout, index<len(nouts)-1, str(index)) \
+      for index, (nin, nout) in enumerate(list(zip(nins, nouts)))]
     return
 
   def __call__(self, X):
