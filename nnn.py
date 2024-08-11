@@ -125,12 +125,15 @@ class Scalar:
 import random
 
 class Neuron:
-  def __init__(self, nin):
+  def __init__(self, nin, _layer='', _index=''):
     """
     nin - number of inputs to the neuron
+    layer - name of the layer where the neuron sits. used for visualisation.
     """
-    self.w = [Scalar(random.uniform(-1, 1), label=f"w{i}") for i in range(nin)]
-    self.b = Scalar(random.uniform(-1, 1), label='b')
+    self.w = [Scalar(random.uniform(-1, 1), label=f"w(L{_layer},{_index},I{i})") for i in range(nin)]
+    self.b = Scalar(random.uniform(-1, 1), label=f'b(L{_layer},{_index})')
+    self._layer=_layer
+    self._index=_index
     return
 
   def __call__(self, X):
@@ -139,19 +142,19 @@ class Neuron:
     returns tanh( W*X+b )
     """
     out = sum(([xi*wi for xi, wi in list(zip(X, self.w))]), self.b)
-    out.label='o'
+    out.label=f'o(L{self._layer},{self._index})'
     return out.tanh()
 
   def parameters(self):
     return self.w + [self.b]
 
 class Layer:
-  def __init__(self, nin, nout):
+  def __init__(self, nin, nout, label=''):
     """
     nin - number of inputs of the layer - i.e. number of neurons in input layer
     nout - number of outputs of the layer - i.e. number of neurons of current layer
     """
-    self.neurons = [Neuron(nin) for _ in (range(nout))]
+    self.neurons = [Neuron(nin, label, str(i)) for i in (range(nout))]
     return
 
   def __call__(self, X):
@@ -181,17 +184,20 @@ class MLP:
             each element of nouts is number of neurons in corresponding layer
     """
     nins = [nin] + nouts[:-1]
-    self.layers = [Layer(nin, nout) for nin, nout in list(zip(nins, nouts))]
+    self.layers = [Layer(nin, nout, str(index)) for index, (nin, nout) in enumerate(list(zip(nins, nouts)))]
     return
 
   def __call__(self, X):
     """
     forward pass of the MLP, X dimension is nin
     """
+    # turn X into list of Scalar to make visulaisation clearer
+    if not isinstance(X[0], Scalar):
+      x=[Scalar(X[i], label=f"x{i}") for i in range(len(X))]
     for layer in self.layers:
-      X = layer(X)
+      x = layer(x)
 
-    return X
+    return x
 
   def parameters(self):
     return [p for l in self.layers for p in l.parameters()]
