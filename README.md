@@ -1,5 +1,6 @@
 # NaiveNeuralNetwork
 Naiive implementation of neural network as a study of Andrej Kaparthy's tutorials.
+
 MiniGrad files:
 * nnn.py - NLP related classes used by the notebook
 * visualiser.py - class to draw computational graph
