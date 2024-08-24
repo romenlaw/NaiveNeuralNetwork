@@ -11,3 +11,4 @@ MakeMore files:
 * names.txt - list of names used as training data
 * makemore.ipynb - notebook going through the makemore project
 * Bigram_W.pt - saved weights values already optimised and converged
+* makemore_backprop.ipynb - makemore part4 backprop ninja
