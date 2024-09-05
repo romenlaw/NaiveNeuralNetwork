@@ -15,3 +15,4 @@ MakeMore files:
 * makemore_wavenet.ipynb - makemore part5 using causal conv layers from Wevenet paper
 
 NanoGPT files:
+* gpt_dev.ipynb - development of nanoGPT following the lecture
