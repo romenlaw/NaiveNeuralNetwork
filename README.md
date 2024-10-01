@@ -24,4 +24,4 @@ Tokeniser files:
 * tinysp_merges.json - byte pair merging results using tiny Shakespeare input data
 
 Visualising Loss in 3D
-* visualise-weights.ipynb - following [What's Inside a NN](https://towardsdatascience.com/whats-inside-a-neural-network-799daf235463)
+* visualise-loss.ipynb - following [What's Inside a NN](https://towardsdatascience.com/whats-inside-a-neural-network-799daf235463)
