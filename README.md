@@ -1,5 +1,5 @@
 # NaiveNeuralNetwork
-Naiive implementation of neural network as a study of Andrej Kaparthy's tutorials.
+Naiive implementation of neural network as a study of Andrej Kaparthy's tutorials, among others.
 
 MiniGrad files:
 * nnn.py - NLP related classes used by the notebook
@@ -22,3 +22,6 @@ Tokeniser files:
 * tinysp_vocab.json - tokens vocabulary created using tiny shakespeare as input data, vocab size around 10240
 * tinysp_vocab_min.json - minimised vocab from 10237 to 8652 tokens by removing unsed ones
 * tinysp_merges.json - byte pair merging results using tiny Shakespeare input data
+
+Visualising Weights in 3D
+* visualise-weights.ipynb - following [What's Inside a NN](https://towardsdatascience.com/whats-inside-a-neural-network-799daf235463)
