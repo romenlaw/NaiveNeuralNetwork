@@ -16,6 +16,7 @@ MakeMore files:
 
 NanoGPT files:
 * gpt_dev.ipynb - development of nanoGPT following the lecture
+* gpt_shakespeare.ipynb - generate shakespeare styled outout using tinysp as vocab of tokeniser
 
 Tokeniser files:
 * tokenisation.ipynb - notebook to study tokenisation
