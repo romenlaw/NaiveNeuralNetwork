@@ -20,6 +20,7 @@ NanoGPT files:
 
 Tokeniser files:
 * tokenisation.ipynb - notebook to study tokenisation
+* tinysp_tokens.pt - list of tokens of tiny Shakespeare using the above tokeniser. Use torch.load to load.
 * tinysp_vocab.json - tokens vocabulary created using tiny shakespeare as input data, vocab size around 10240
 * tinysp_vocab_min.json - minimised vocab from 10237 to 8652 tokens by removing unsed ones
 * tinysp_merges.json - byte pair merging results using tiny Shakespeare input data
