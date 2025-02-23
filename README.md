@@ -4,7 +4,7 @@ Naiive implementation of neural network as a study of Andrej Kaparthy's tutorial
 MiniGrad files:
 * nnn.py - NLP related classes used by the notebook
 * visualiser.py - class to draw computational graph
-* tests.ipynb - notebook going through the MiniGrad
+* tests.ipynb - notebook going through the MiniGrad, incl. computational graphs
 * Classifier_demo.ipynb - using the NLP to classify samples
 
 MakeMore files:
