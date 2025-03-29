@@ -9,7 +9,7 @@ MiniGrad files:
 
 MakeMore files:
 * names.txt - list of names used as training data
-* makemore.ipynb - notebook going through the makemore project
+* makemore.ipynb - notebook going through the makemore project, incl. analysing and plotting NN internals
 * Bigram_W.pt - saved weights values already optimised and converged
 * makemore_backprop.ipynb - makemore part4 backprop ninja
 * makemore_wavenet.ipynb - makemore part5 using causal conv layers from Wevenet paper
